@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TelluriumPOS.InventoryPage"
+             Title="Inventory"
+             xmlns:viewmodel="clr-namespace:TelluriumPOS.ViewModels"
+             x:DataType="viewmodel:InventoryPageViewModel"
+             xmlns:models="clr-namespace:TelluriumPOS.Catalysts">
+        <ContentPage.Resources>
+            <ColumnDefinitionCollection x:Key="ProductColumns">
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="100" />
+            </ColumnDefinitionCollection>
+            <ColumnDefinitionCollection x:Key="CategoryColumns">
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="400" />
+            </ColumnDefinitionCollection>
+        </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout HorizontalOptions="Start" Padding="12, 14">
+            <!-- Products Table -->
+            <Label Text="Products:" FontSize="24" TextDecorations="Underline" Margin="0,14,8,10" />
+            <CollectionView ItemsSource="{Binding Products}">
+            <!-- Products Header -->
+            <CollectionView.Header>
+                <Grid ColumnDefinitions="{StaticResource ProductColumns}" ColumnSpacing="0" Margin="0, 0, 0, 4">
+                    <Label Text="ID" Grid.Column="0" Style="{StaticResource ProductTableHeader}" />
+                    <Label Text="Name" Grid.Column="1" Style="{StaticResource ProductTableHeader}" />
+                    <Label Text="Barcode" Grid.Column="2" Style="{StaticResource ProductTableHeader}" />
+                    <Label Text="Category Id" Grid.Column="3" Style="{StaticResource ProductTableHeader}" />
+                    <Label Text="Price" Grid.Column="4" Style="{StaticResource ProductTableHeader}" />
+                    <Label Text="Cost Price" Grid.Column="5" Style="{StaticResource ProductTableHeader}" />
+                    <Label Text="Stock" Grid.Column="6" Style="{StaticResource ProductTableHeader}" />
+                    <Label Text="VAT%" Grid.Column="7" Style="{StaticResource ProductTableHeader}" />
+                    <Label Text="Is Active" Grid.Column="8" Style="{StaticResource ProductTableHeader}" />
+                </Grid>
+            </CollectionView.Header>
+
+            <!-- Products Data -->
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Product">
+                    <Grid ColumnDefinitions="{StaticResource ProductColumns}" ColumnSpacing="0">
+                        <Label Text="{Binding Id}" Grid.Column="0" Style="{StaticResource ProductTableContent}" />
+                        <Label Text="{Binding Name}" Grid.Column="1" Style="{StaticResource ProductTableContent}" />
+                        <Label Text="{Binding Barcode}" Grid.Column="2" Style="{StaticResource ProductTableContent}" />
+                        <Label Text="{Binding CategoryId}" Grid.Column="3" Style="{StaticResource ProductTableContent}" />
+                        <Label Text="{Binding Price}" Grid.Column="4" Style="{StaticResource ProductTableContent}" />
+                        <Label Text="{Binding CostPrice}" Grid.Column="5" Style="{StaticResource ProductTableContent}" />
+                        <Label Text="{Binding Stock}" Grid.Column="6" Style="{StaticResource ProductTableContent}" />
+                        <Label Text="{Binding VAT}" Grid.Column="7" Style="{StaticResource ProductTableContent}" />
+                        <Label Text="{Binding IsActive}" Grid.Column="8" Style="{StaticResource ProductTableContent}" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+            <BoxView BackgroundColor="{StaticResource Tertiary}" HeightRequest="1" Margin="0, 10, 0, 0" WidthRequest="1200" HorizontalOptions="Start"/>
+            <Label Text="0 and False also represents NULL Data" FontAttributes="Italic" Margin="0 ,20, 0, 0" ToolTipProperties.Text="NULL data are records/values that you haven't specified while entering the record, please check Database to modify if you want" />
+            <!-- Item Table Actions -->
+            <Grid Margin="0, 12" ColumnSpacing="24" RowDefinitions="*" ColumnDefinitions="*, *, *, *" WidthRequest="425" HorizontalOptions="Start">
+            <!-- Add Item Button -->
+            <VerticalStackLayout Grid.Column="0" Style="{StaticResource VerticalStackLayoutLikeButtonStyle}" Padding="8">
+                <ImageButton Command="{Binding ShowAddItemSectionCommand}" WidthRequest="48" Source="additem.png" />
+                <Label HorizontalTextAlignment="Center" TextColor="white" Text="Add Item" />
+            </VerticalStackLayout>
+            <!-- Modify Item Button -->
+            <VerticalStackLayout Grid.Column="1" Style="{StaticResource VerticalStackLayoutLikeButtonStyle}" Padding="8">
+                <ImageButton WidthRequest="48" Source="edit.png" />
+                <Label HorizontalTextAlignment="Center" TextColor="white" Text="Edit Item" />
+            </VerticalStackLayout>
+            <!-- Remove Item Button -->
+            <VerticalStackLayout Grid.Column="2" Style="{StaticResource VerticalStackLayoutLikeButtonStyle}" Padding="8">
+                <ImageButton WidthRequest="48" Source="remove.png" />
+                <Label HorizontalTextAlignment="Center" TextColor="white" Text="Remove Item" />
+            </VerticalStackLayout>
+            <!-- Bulk Add Item Button -->
+            <VerticalStackLayout Grid.Column="3" Style="{StaticResource VerticalStackLayoutLikeButtonStyle}" Padding="8">
+                <ImageButton WidthRequest="48" Source="bulkadd.png" />
+                <Label HorizontalTextAlignment="Center" TextColor="white" Text="Bulk Add Item" />
+            </VerticalStackLayout>
+        </Grid>
+            <!-- Add Item Section (Conditionally Rendered) -->
+            <Border IsVisible="{Binding ShowAddItem}" Stroke="{StaticResource Tertiary}" StrokeThickness="1" HorizontalOptions="Start">
+            <!-- Master Grid - first column for entering details and second for save or cancel-->
+                <Grid RowDefinitions="*, *" ColumnDefinitions="0.7*, 0.3*" WidthRequest="558" HorizontalOptions="Start" Padding="12">
+            <!-- First Column -->
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontSize="22" TextDecorations="Underline" Margin="0, 0, 0, 10" Text="Add New Item" />
+            <VerticalStackLayout Grid.Row="1" Grid.Column="0">
+                <Grid RowSpacing="8" RowDefinitions="*, *, *, *, *, *, *, *" ColumnDefinitions="0.3*, 0.7*">
+                    <!-- Name -->
+                    <Label Grid.Row="0" Grid.Column="0" FontSize="16" Text="Name:" />
+                    <Border Grid.Row="0" Grid.Column="1" Stroke="Black" StrokeThickness="1">
+                        <Entry Text="{Binding AddItemName}" IsSpellCheckEnabled="True" BackgroundColor="{StaticResource Secondary}" FontSize="16" />
+                    </Border>
+                    <!-- Barcode -->
+                    <Label Grid.Row="1" Grid.Column="0" FontSize="16" Text="Barcode:" />
+                    <Border Grid.Row="1" Grid.Column="1" Stroke="Black" StrokeThickness="1">
+                        <Entry Text="{Binding AddItemBarcode}" BackgroundColor="{StaticResource Secondary}" FontSize="16" />
+                    </Border>
+                    <!-- Category Id -->
+                    <Label Grid.Row="2" Grid.Column="0" FontSize="16" Text="Category Id:" />
+                    <Border Grid.Row="2" Grid.Column="1" Stroke="Black" StrokeThickness="1"  BackgroundColor="{StaticResource Tertiary}" HorizontalOptions="Start" Padding="2">
+                        <HorizontalStackLayout Spacing="12" Padding="0, 0, 10, 0">
+                            <Stepper Minimum="0" Maximum="10000" BackgroundColor="{StaticResource Tertiary}" Value="{Binding AddItemCategoryid, Mode=TwoWay}" />
+                            <Label  FontSize="16" FontAttributes="Bold" TextColor="White" VerticalTextAlignment="Center" Text="{Binding AddItemCategoryid}" />
+                        </HorizontalStackLayout>
+                    </Border>
+                    <!-- Price -->
+                    <Label Grid.Row="3" Grid.Column="0" FontSize="16" Text="Price + VAT%:" FontAttributes="Italic" ToolTipProperties.Text="This - VAT% = Final Price. Because VAT% will be added in billing." />
+                    <Border Grid.Row="3" Grid.Column="1" Stroke="Black" StrokeThickness="1">
+                        <Entry Text="{Binding AddItemPricePlusVAT}" Keyboard="Numeric" BackgroundColor="{StaticResource Secondary}" FontSize="16" />
+                    </Border>
+                    <!-- Cost Price -->
+                    <Label Grid.Row="4" Grid.Column="0" FontSize="16" Text="Cost Price:" FontAttributes="Italic" ToolTipProperties.Text="How much did it cost to buy?" />
+                    <Border Grid.Row="4" Grid.Column="1" Stroke="Black" StrokeThickness="1">
+                        <Entry Text="{Binding AddItemCostPrice}" Keyboard="Numeric" BackgroundColor="{StaticResource Secondary}" FontSize="16" />
+                    </Border>
+                    <!-- Stock -->
+                    <Label Grid.Row="5" Grid.Column="0" FontSize="16" Text="Stock:" />
+                    <Border Grid.Row="5" Grid.Column="1" Stroke="Black" StrokeThickness="1">
+                        <Entry Text="{Binding AddItemStock}" Keyboard="Numeric" BackgroundColor="{StaticResource Secondary}" FontSize="16" />
+                    </Border>
+                    <!-- VAT% -->
+                    <Label Grid.Row="6" Grid.Column="0" FontSize="16" Text="VAT%" />
+                    <Border Grid.Row="6" Grid.Column="1" Stroke="Black" StrokeThickness="1"  BackgroundColor="{StaticResource Tertiary}" HorizontalOptions="Start" Padding="2">
+                        <HorizontalStackLayout Spacing="12" Padding="0, 0, 10, 0">
+                                <Stepper Minimum="0" Maximum="100" BackgroundColor="{StaticResource Tertiary}" Value="{Binding AddItemVATPercentage, Mode=TwoWay}" />
+                                <Label FontSize="16" FontAttributes="Bold" TextColor="White" VerticalTextAlignment="Center" Text="{Binding AddItemVATPercentage}" />
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
+            <!-- Second Column -->
+            <VerticalStackLayout Grid.Row="1" Grid.Column="1" Padding="20, 0">
+                <HorizontalStackLayout Style="{StaticResource HorizontalStackLayoutLikeButtonStyle}" Margin="0, 0, 0, 10" Padding="7, 0, 0, 0">
+                    <Image WidthRequest="24" Source="save.png"></Image>
+                    <Button Command="{Binding AddItemCommand}" Style="{StaticResource OverrideCustomButtonStyle}" FontSize="24" Text="Save" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Style="{StaticResource HorizontalStackLayoutLikeButtonStyle}" Padding="7, 0, 0, 0">
+                    <Image WidthRequest="24" Source="cancel.png"></Image>
+                    <Button Command="{Binding HideAddItemSectionCommand}" Style="{StaticResource OverrideCustomButtonStyle}" FontSize="24" Text="Cancel"></Button>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Grid>
+            </Border>
+            <!-- Categories Table -->
+            <Label Text="Categories:" FontSize="24" TextDecorations="Underline" Margin="0,14,8,10" />
+            <CollectionView ItemsSource="{Binding Categories}">
+            <!-- Categories Header -->
+            <CollectionView.Header>
+                <Grid ColumnDefinitions="{StaticResource CategoryColumns}" ColumnSpacing="0" Margin="0, 0, 0, 4">
+                    <Label Text="ID" Grid.Column="0" Style="{StaticResource ProductTableHeader}" />
+                    <Label Text="Name" Grid.Column="1" Style="{StaticResource ProductTableHeader}" />
+                </Grid>
+            </CollectionView.Header>
+
+            <!-- Categories Data -->
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Category">
+                    <Grid ColumnDefinitions="{StaticResource CategoryColumns}" ColumnSpacing="0">
+                        <Label Text="{Binding Id}" Grid.Column="0" Style="{StaticResource ProductTableContent}" />
+                        <Label Text="{Binding Name}" Grid.Column="1" Style="{StaticResource ProductTableContent}" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+            <BoxView BackgroundColor="{StaticResource Tertiary}" HeightRequest="1" Margin="0, 10, 0, 0" WidthRequest="350" HorizontalOptions="Start" />
+            <!-- Categories Table Actions Grid -->
+            <Grid Margin="0, 12" ColumnSpacing="24" RowDefinitions="*" ColumnDefinitions="*, *, *, *" WidthRequest="425" HorizontalOptions="Start">
+                <!-- Add Category Button -->
+                <VerticalStackLayout Grid.Column="0" Style="{StaticResource VerticalStackLayoutLikeButtonStyle}" Padding="8">
+                    <ImageButton Command="{Binding ShowAddCategorySectionCommand}" WidthRequest="48" Source="additem.png" />
+                    <Label HorizontalTextAlignment="Center" TextColor="white" Text="Add Category" />
+                </VerticalStackLayout>
+                <!-- Modify Category Button -->
+                <VerticalStackLayout Grid.Column="1" Style="{StaticResource VerticalStackLayoutLikeButtonStyle}" Padding="8">
+                    <ImageButton Command="{Binding ShowModifyCategorySectionCommand}" WidthRequest="48" Source="edit.png" />
+                    <Label HorizontalTextAlignment="Center" TextColor="white" Text="Edit Category" />
+                </VerticalStackLayout>
+                <!-- Remove Category Button -->
+                <VerticalStackLayout Grid.Column="2" Style="{StaticResource VerticalStackLayoutLikeButtonStyle}" Padding="8">
+                    <ImageButton Command="{Binding ShowRemoveCategorySectionCommand}" WidthRequest="48" Source="remove.png" />
+                    <Label HorizontalTextAlignment="Center" TextColor="white" Text="Remove Category" />
+                </VerticalStackLayout>
+            </Grid>
+            <!-- Add Category Action (Conditionally Rendered) -->
+            <Border IsVisible="{Binding ShowAddCategory}" Stroke="{StaticResource Tertiary}" StrokeThickness="1" HorizontalOptions="Start">
+                <VerticalStackLayout WidthRequest="558" HorizontalOptions="Start" Padding="12">
+                    <Label FontSize="22" TextDecorations="Underline" Margin="0, 0, 0, 10" Text="Add New Category" />
+                    <!-- Category Name -->
+                    <Label FontSize="16" Text="Category Name:" Margin="0, 0, 0, 6" />
+                    <Border Grid.Row="0" Grid.Column="1" Stroke="Black" StrokeThickness="1" WidthRequest="400" HorizontalOptions="Start">
+                        <Entry Text="{Binding AddCategoryName}" IsSpellCheckEnabled="True" BackgroundColor="{StaticResource Secondary}" FontSize="16" />
+                    </Border>
+                    <HorizontalStackLayout Margin="0, 10" Spacing="20">
+                        <HorizontalStackLayout Style="{StaticResource HorizontalStackLayoutLikeButtonStyle}" Padding="7, 0, 0, 0">
+                            <Image WidthRequest="24" Source="save.png"></Image>
+                            <Button Command="{Binding AddNewCategoryCommand}" Style="{StaticResource OverrideCustomButtonStyle}" FontSize="24" Text="Add" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Style="{StaticResource HorizontalStackLayoutLikeButtonStyle}" Padding="7, 0, 0, 0">
+                            <Image WidthRequest="24" Source="cancel.png"></Image>
+                            <Button Command="{Binding HideAddCategorySectionCommand}" Style="{StaticResource OverrideCustomButtonStyle}" FontSize="24" Text="Cancel"></Button>
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+            <!-- Modify Category Action (Conditionally Rendered) -->
+            <Border IsVisible="{Binding ShowModifyCategory}" Stroke="{StaticResource Tertiary}" StrokeThickness="1" HorizontalOptions="Start">
+                <VerticalStackLayout WidthRequest="558" HorizontalOptions="Start" Padding="12">
+                    <Label FontSize="22" TextDecorations="Underline" Margin="0, 0, 0, 10" Text="Modify Existing Category" />
+                    <!-- Category Id -->
+                    <Label FontSize="16" Text="Existing Category Id:" Margin="0, 0, 0, 6" />
+                    <Border Grid.Row="0" Grid.Column="1" Stroke="Black" StrokeThickness="1" WidthRequest="400" HorizontalOptions="Start" Margin="0, 0, 0, 10">
+                        <Entry Text="{Binding ModifyCategoryId}" Keyboard="Numeric" BackgroundColor="{StaticResource Secondary}" FontSize="16" />
+                    </Border>
+                    <!-- Category Name -->
+                    <Label FontSize="16" Text="New Category Name:" Margin="0, 0, 0, 6" />
+                    <Border Grid.Row="0" Grid.Column="1" Stroke="Black" StrokeThickness="1" WidthRequest="400" HorizontalOptions="Start">
+                        <Entry Text="{Binding ModifyCategoryName}" IsSpellCheckEnabled="True" BackgroundColor="{StaticResource Secondary}" FontSize="16" />
+                    </Border>
+                    <HorizontalStackLayout Margin="0, 10" Spacing="20">
+                        <HorizontalStackLayout Style="{StaticResource HorizontalStackLayoutLikeButtonStyle}" Padding="7, 0, 0, 0">
+                            <Image WidthRequest="24" Source="save.png"></Image>
+                            <Button Command="{Binding ModifyCategoryCommand}" Style="{StaticResource OverrideCustomButtonStyle}" FontSize="24" Text="Modify" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Style="{StaticResource HorizontalStackLayoutLikeButtonStyle}" Padding="7, 0, 0, 0">
+                            <Image WidthRequest="24" Source="cancel.png"></Image>
+                            <Button Command="{Binding HideModifyCategorySectionCommand}" Style="{StaticResource OverrideCustomButtonStyle}" FontSize="24" Text="Cancel"></Button>
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+            <!-- Remove Category Action (Conditionally Rendered) -->
+            <Border IsVisible="{Binding ShowRemoveCategory}" Stroke="{StaticResource Tertiary}" StrokeThickness="1" HorizontalOptions="Start">
+                <VerticalStackLayout WidthRequest="558" HorizontalOptions="Start" Padding="12">
+                    <Label FontSize="22" TextDecorations="Underline" Margin="0, 0, 0, 10" Text="Remove Category" />
+                    <!-- Category Id -->
+                    <Label FontSize="16" Text="Existing Category Id:" Margin="0, 0, 0, 6" />
+                    <Border Grid.Row="0" Grid.Column="1" Stroke="Black" StrokeThickness="1" WidthRequest="400" HorizontalOptions="Start" Margin="0, 0, 0, 10">
+                        <Entry Text="{Binding RemoveCategoryId}" Keyboard="Numeric" BackgroundColor="{StaticResource Secondary}" FontSize="16" />
+                    </Border>
+                    <HorizontalStackLayout Margin="0, 10" Spacing="20">
+                        <HorizontalStackLayout Style="{StaticResource HorizontalStackLayoutLikeButtonStyle}" Padding="7, 0, 0, 0">
+                            <Image WidthRequest="24" Source="save.png"></Image>
+                            <Button Command="{Binding RemoveCategoryCommand}" Style="{StaticResource OverrideCustomButtonStyle}" FontSize="24" Text="Remove (No Undo)" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Style="{StaticResource HorizontalStackLayoutLikeButtonStyle}" Padding="7, 0, 0, 0">
+                            <Image WidthRequest="24" Source="cancel.png"></Image>
+                            <Button Command="{Binding HideRemoveCategorySectionCommand}" Style="{StaticResource OverrideCustomButtonStyle}" FontSize="24" Text="Cancel"></Button>
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

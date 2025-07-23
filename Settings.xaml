@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TelluriumPOS.Settings"
+             Title="Settings"
+             xmlns:viewmodel="clr-namespace:TelluriumPOS.ViewModels"
+             x:DataType="viewmodel:SettingsViewModel">
+    <Grid RowDefinitions="Auto" ColumnDefinitions="0.4*, 0.6*" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+        <ScrollView HeightRequest="400" Grid.Column="0" Grid.Row="0">
+            <VerticalStackLayout x:Name="SettingsGrid" HorizontalOptions="FillAndExpand" Padding="10, 6">
+                <!-- Company Name -->
+                <Grid ColumnDefinitions="*, *" HorizontalOptions="FillAndExpand" Padding="0, 0, 0, 10">
+                    <Label Grid.Column="0" FontSize="20" Text="Company Name" Style="{StaticResource SettingsGridLabelStyle}" />
+                    <Border Grid.Column="1" Stroke="Black" StrokeThickness="1">
+                        <Entry Text="{Binding CompanynameValue}" BackgroundColor="{StaticResource Secondary}" FontSize="20" Style="{StaticResource SettingsGridLabelStyle}" />
+                    </Border>
+                </Grid>
+                <!-- Username -->
+                <Grid ColumnDefinitions="*, *" HorizontalOptions="FillAndExpand" Padding="0, 0, 0, 10">
+                    <Label Grid.Column="0" FontSize="20" Text="Username" Style="{StaticResource SettingsGridLabelStyle}" />
+                    <Border Grid.Column="1" Stroke="Black" StrokeThickness="1">
+                        <Entry Text="{Binding UsernameValue}" BackgroundColor="{StaticResource Secondary}" FontSize="20" Style="{StaticResource SettingsGridLabelStyle}" />
+                    </Border>
+                </Grid>
+                <!-- Currency Prefix -->
+                <Grid ColumnDefinitions="*, *" HorizontalOptions="FillAndExpand" Padding="0, 0, 0, 10">
+                    <Label Grid.Column="0" FontSize="20" Text="Currency Prefix" Style="{StaticResource SettingsGridLabelStyle}" />
+                    <Border Grid.Column="1" Stroke="Black" StrokeThickness="1">
+                        <Entry Text="{Binding CurrencyprefixValue}" BackgroundColor="{StaticResource Secondary}" FontSize="20" Style="{StaticResource SettingsGridLabelStyle}" />
+                    </Border>
+                </Grid>
+                <!-- Show Today's Sales -->
+                <Grid ColumnDefinitions="*, *" HorizontalOptions="FillAndExpand" Padding="0, 0, 0, 20">
+                    <Label Grid.Column="0" FontSize="20" Text="Show Today's Sales (Terminal)" Style="{StaticResource SettingsGridLabelStyle}" />
+                    <HorizontalStackLayout Grid.Column="1">
+                        <RadioButton Content="Yes" CheckedChanged="YesRadioCheckedChanged" IsChecked="{Binding ShowtodayssalesValue}"></RadioButton>
+                        <RadioButton Content="No" IsChecked="{Binding NotShowtodayssalesValue}"></RadioButton>
+                    </HorizontalStackLayout>
+                </Grid>
+                <!-- Default VAT Percentage -->
+                <Grid ColumnDefinitions="*, *" HorizontalOptions="FillAndExpand" Padding="0, 0, 0, 10">
+                    <Label Grid.Column="0" FontSize="20" Text="Default VAT%" Style="{StaticResource SettingsGridLabelStyle}" />
+                    <HorizontalStackLayout Grid.Column="1" Spacing="12">
+                        <Border Stroke="Black" StrokeThickness="1" BackgroundColor="{StaticResource Tertiary}">
+                            <Stepper Maximum="100" Minimum="0" Increment="1" BackgroundColor="{StaticResource Tertiary}" Value="{Binding DefaultVATPercentageValue, Mode=TwoWay}" />
+                        </Border>
+                        <FlexLayout VerticalOptions="Center">
+                            <Label FontSize="20" Text="{Binding DefaultVATPercentageValue}" />
+                            <Label FontSize="20" Text="%" />
+                        </FlexLayout>
+                    </HorizontalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+        <FlexLayout Padding="10" Direction="Column" AlignItems="Start" HeightRequest="200" VerticalOptions="Start" Grid.Column="1" Grid.Row="0">
+            <HorizontalStackLayout Style="{StaticResource HorizontalStackLayoutLikeButtonStyle}" Margin="0, 0, 0, 8" Padding="7, 0, 0, 0">
+                <Image WidthRequest="24" Source="save.png"></Image>
+                <Button Command="{Binding SaveSettingsCommand}" Style="{StaticResource OverrideCustomButtonStyle}" FontSize="24" Text="Save"></Button>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Style="{StaticResource HorizontalStackLayoutLikeButtonStyle}" Padding="7, 0, 0, 0">
+                <Image WidthRequest="24" Source="return.png"></Image>
+                <Button Command="{Binding ReturnToMainMenuCommand}" Style="{StaticResource OverrideCustomButtonStyle}" FontSize="24" Text="Return to Main Menu"></Button>
+            </HorizontalStackLayout>
+        </FlexLayout>
+    </Grid>
+</ContentPage>

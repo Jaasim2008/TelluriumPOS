@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TelluriumPOS.TerminalPage"
+             Title="Terminal"
+             xmlns:viewmodel="clr-namespace:TelluriumPOS.ViewModels"
+             x:DataType="viewmodel:TerminalViewModel">
+    <!-- Master Grid / 1 Col 3 Rows (5%, max, 5%) -->
+    <Grid RowDefinitions="0.05*, *, 0.05*" ColumnDefinitions="*" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <!-- Top Bar -->
+        <Grid RowDefinitions="*, 0.01*" ColumnDefinitions="*, * , *, *" Grid.Row="0" BackgroundColor="{StaticResource Secondary}">
+            <HorizontalStackLayout Spacing="6"  Grid.Row="0" Grid.Column="0" Padding="5, 0">
+                <Image Source="time.png" WidthRequest="18"></Image>
+                <Label Text="{Binding CurrentTime}" Style="{StaticResource TopBarLabelStyle}"></Label>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Spacing="6" Grid.Row="0" Grid.Column="1">
+                <Image Source="companyname.png" WidthRequest="18"></Image>
+                <Label Text="{Binding DatabaseCompanyname}" Style="{StaticResource TopBarLabelStyle}"></Label>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Spacing="6" Grid.Row="0" Grid.Column="2">
+                <Image Source="username.png" WidthRequest="18"></Image>
+                <Label Text="{Binding DatabaseUsername}" Style="{StaticResource TopBarLabelStyle}"></Label>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Spacing="6" Grid.Row="0" Grid.Column="3">
+                <Image IsVisible="{Binding ShouldWeShowTodaysSales}" Source="sales.png" WidthRequest="18"></Image>
+                <Label IsVisible="{Binding ShouldWeShowTodaysSales}" Text="{Binding ShowTodaysSales}" Style="{StaticResource TopBarLabelStyle}"></Label>
+            </HorizontalStackLayout>
+            <BoxView Grid.Row="1" Grid.ColumnSpan="4" BackgroundColor="Black" HeightRequest="1"></BoxView>
+        </Grid>
+        <!-- Main Row for Everything Special ✨ -->
+        <Grid Grid.Row="1" RowDefinitions="*" ColumnDefinitions="0.8*, 0.2*">
+            <!-- Cart preview + Other sales calculation data -->
+            <Grid Grid.Column="0" RowDefinitions="0.85*, 0.15*" ColumnDefinitions="*">
+                <!-- Cart preview -->
+                <Label Grid.Row="0" Text="Cart preview" />
+                <!-- Sales calculation data -->
+                <HorizontalStackLayout Grid.Row="1" Spacing="16" Padding="6, 0, 0, 0" >
+                    <VerticalStackLayout Spacing="10">
+                        <!-- Gross Sale -->
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="Gross Sale:" TextColor="{StaticResource Tertiary}" Style="{StaticResource SalesCalculationLabel}" />
+                            <HorizontalStackLayout>
+                                <Label Text="22" Style="{StaticResource SalesCalculationLabel}" />
+                                <Label Text="{Binding CurrencyPrefix}" Style="{StaticResource SalesCalculationCurrencyLabel}" />
+                            </HorizontalStackLayout>
+                        </HorizontalStackLayout>
+                        <!-- Discounts/Loyalty Reduction -->
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="Discount/Loyalty Reduction:  " TextColor="{StaticResource Tertiary}" Style="{StaticResource SalesCalculationLabel}" />
+                            <HorizontalStackLayout>
+                                <Label Text="0.00" Style="{StaticResource SalesCalculationLabel}" />
+                                <Label Text="{Binding CurrencyPrefix}" Style="{StaticResource SalesCalculationCurrencyLabel}" />
+                            </HorizontalStackLayout>
+                        </HorizontalStackLayout>
+                        <!-- Returns -->
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="Return:  " TextColor="{StaticResource Tertiary}" Style="{StaticResource SalesCalculationLabel}" />
+                            <HorizontalStackLayout>
+                                <Label Text="0.00" Style="{StaticResource SalesCalculationLabel}" />
+                                <Label Text="{Binding CurrencyPrefix}" Style="{StaticResource SalesCalculationCurrencyLabel}" />
+                            </HorizontalStackLayout>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="10">
+                        <!-- VAT/TAX -->
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="VAT/TAX" TextColor="{StaticResource Tertiary}" Style="{StaticResource SalesCalculationLabel}" />
+                            <HorizontalStackLayout>
+                                <Label Text="2.00" Style="{StaticResource SalesCalculationLabel}" />
+                                <Label Text="{Binding CurrencyPrefix}" Style="{StaticResource SalesCalculationCurrencyLabel}" />
+                            </HorizontalStackLayout>
+                        </HorizontalStackLayout>
+                        <!-- Net Sale -->
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="Net Sale: " TextColor="{StaticResource Tertiary}" Style="{StaticResource SalesCalculationLabel}" />
+                            <HorizontalStackLayout>
+                                <Label Text="24" Style="{StaticResource SalesCalculationLabel}" />
+                                <Label Text="{Binding CurrencyPrefix}" Style="{StaticResource SalesCalculationCurrencyLabel}" />
+                            </HorizontalStackLayout>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+            </Grid>
+            <!-- Sidebar -->
+            <Grid Grid.Column="1" RowDefinitions="0.05*, 0.95*" ColumnDefinitions="0.01*, 0.99*">
+                <!-- Border Left -->
+                <BoxView Grid.RowSpan="2" Grid.Column="0" BackgroundColor="Black" WidthRequest="1" HorizontalOptions="End"></BoxView>
+                <!-- Tab Picker - Essential/Sales Tab -->
+                <Grid Grid.Row="0" Grid.Column="1" RowDefinitions="*" ColumnDefinitions="0.5*, 0.5*">
+                    <Button Command="{Binding ShowEssentialsTabCommand}" FontSize="14" Grid.Column="0" Text="Essential">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsEssentialsTabOpen}" Value="true">
+                                <Setter Property="Background" Value="{StaticResource Tertiary}" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Button Command="{Binding ShowSalesTabCommand}" FontSize="14" Grid.Column="1" Text="Sales">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsSalesTabOpen}" Value="True">
+                                <Setter Property="Background" Value="{StaticResource Tertiary}" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Grid>
+                <!-- Tab content -->
+                <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="0.3*, 0.7*" ColumnDefinitions="*">
+                    <!-- Net sale -->
+                    <!-- TODO responsive layout -->
+                    <VerticalStackLayout Grid.Row="0">
+                        <Label FontSize="24" Text="Net Sale" Padding="12, 12, 0, 0"/>
+                        <HorizontalStackLayout Padding="0, 20, 0, 0" HorizontalOptions="Center">
+                            <Label FontSize="78" Text="24.00" TextColor="{StaticResource Tertiary}" />
+                            <Label Padding="0, 0, 0, 18" FontSize="18" VerticalOptions="End" Text="{Binding CurrencyPrefix}" TextColor="{StaticResource Tertiary}" />
+                        </HorizontalStackLayout>
+                        <BoxView BackgroundColor="Black" HeightRequest="1"></BoxView>
+                    </VerticalStackLayout>
+                    <!-- Options menu -->
+                    <!-- Options: 1.new cart, 2.add item, 7.return item, 8.exchange, 3.check price, 5.pay (cash/card), 4.loyalty, 9.calc, 6.home (ask confirmation) -->
+                    <!-- Essentials Tab -->
+                    <Grid IsVisible="{Binding IsEssentialsTabOpen}" Grid.Row="1" ColumnSpacing="14" RowSpacing="10" RowDefinitions="*, *, *" ColumnDefinitions="*, *" Padding="18">
+                        <FlexLayout Grid.Row="0" Grid.Column="0" Style="{StaticResource OptionsButton}">
+                            <ImageButton Source="newcart.png" Style="{StaticResource OptionsButtonImageButton}" />
+                            <Label Text="New Cart" Style="{StaticResource OptionsButtonLabel}"/>
+                        </FlexLayout>
+                        <FlexLayout Grid.Row="0" Grid.Column="1" Style="{StaticResource OptionsButton}">
+                            <ImageButton Clicked="ShowAddItemPopup" Source="additem.png" Style="{StaticResource OptionsButtonImageButton}" />
+                            <Label Text="Add Item" Style="{StaticResource OptionsButtonLabel}"/>
+                        </FlexLayout>
+                        <FlexLayout Grid.Row="1" Grid.Column="0" Style="{StaticResource OptionsButton}">
+                            <ImageButton Source="checkprice.png" Style="{StaticResource OptionsButtonImageButton}" />
+                            <Label Text="Check Price" Style="{StaticResource OptionsButtonLabel}"/>
+                        </FlexLayout>
+                        <FlexLayout Grid.Row="1" Grid.Column="1" Style="{StaticResource OptionsButton}">
+                            <ImageButton Source="loyalty.png" Style="{StaticResource OptionsButtonImageButton}" />
+                            <Label Text="Loyalty" Style="{StaticResource OptionsButtonLabel}"/>
+                        </FlexLayout>
+                        <FlexLayout Grid.Row="2" Grid.Column="0" Style="{StaticResource OptionsButton}">
+                            <ImageButton Source="pay.png" Style="{StaticResource OptionsButtonImageButton}" />
+                            <Label Text="Pay" Style="{StaticResource OptionsButtonLabel}"/>
+                        </FlexLayout>
+                        <FlexLayout Grid.Row="2" Grid.Column="1" Style="{StaticResource OptionsButton}">
+                            <ImageButton Clicked="ShowReturnToHomePopup" Source="home.png" Style="{StaticResource OptionsButtonImageButton}" />
+                            <Label Text="Home" Style="{StaticResource OptionsButtonLabel}"/>
+                        </FlexLayout>
+                    </Grid>
+                    <!-- Sales Tab -->
+                    <Grid IsVisible="{Binding IsSalesTabOpen}" Grid.Row="1" ColumnSpacing="14" RowSpacing="10" RowDefinitions="*, *, *" ColumnDefinitions="*, *" Padding="18">
+                        <FlexLayout Grid.Row="0" Grid.Column="0" Style="{StaticResource OptionsButton}">
+                            <ImageButton Source="exchange.png" Style="{StaticResource OptionsButtonImageButton}" />
+                            <Label Text="Exchange" Style="{StaticResource OptionsButtonLabel}"/>
+                        </FlexLayout>
+                        <FlexLayout Grid.Row="0" Grid.Column="1" Style="{StaticResource OptionsButton}">
+                            <ImageButton Source="return.png" Style="{StaticResource OptionsButtonImageButton}" />
+                            <Label Text="Return" Style="{StaticResource OptionsButtonLabel}"/>
+                        </FlexLayout>
+                        <FlexLayout Grid.Row="1" Grid.Column="0" Style="{StaticResource OptionsButton}">
+                            <ImageButton ToolTipProperties.Text="Opens Operating System's Calculator" Command="{Binding OpenCalculatorCommand}" Source="calculator.png" Style="{StaticResource OptionsButtonImageButton}" />
+                            <Label Text="Calculator" FontAttributes="Italic" Style="{StaticResource OptionsButtonLabel}"/>
+                        </FlexLayout>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+        <!-- Status Bar -->
+        <VerticalStackLayout Grid.Row="2" BackgroundColor="{StaticResource Secondary}">
+            <BoxView BackgroundColor="Black" HeightRequest="1"></BoxView>
+            <Label Padding="4" FontSize="18" FontAttributes="Italic" Text="{Binding Status}" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TelluriumPOS.DebuggerPage"
+             Title="Debugger Page"
+             xmlns:viewmodel="clr-namespace:TelluriumPOS.ViewModels"
+             x:DataType="viewmodel:DebuggerPageViewModel">
+    <Grid ColumnDefinitions="0.4*, 0.6*" RowDefinitions="*">
+        <VerticalStackLayout Grid.Column="0" Padding="4">
+            <Label Text="displaypreferences.db" FontSize="18"></Label>
+            <Label Text="{Binding DisplaypreferencesFromDatabase}" Margin="0, 3, 0, 0"></Label>
+            <Button Command="{Binding OpenCmdCommand}" Padding="2, 0" Margin="0, -4, 0, 10" Text="Open CMD" FontAttributes="Italic" ToolTipProperties.Text="opens command line at C:\ProgramData\TelluriumPOS" HorizontalOptions="Start" FontSize="11"></Button>
+            <BoxView BackgroundColor="Black" HeightRequest="1"></BoxView>
+        </VerticalStackLayout>
+        <VerticalStackLayout Grid.Column="1">
+            <FlexLayout Direction="Row" Margin="0, 10, 0 ,0">
+                <HorizontalStackLayout Style="{StaticResource HorizontalStackLayoutLikeButtonStyle}" Padding="4">
+                    <Image WidthRequest="26" Source="log.png"></Image>
+                    <Button Command="{Binding RunLogViewerCommand}" Style="{StaticResource OverrideCustomButtonStyle}" FontSize="18" Text="Open Log"></Button>
+                </HorizontalStackLayout>
+            </FlexLayout>
+            <FlexLayout Direction="Row" Margin="0, 20, 0 ,0">
+                <HorizontalStackLayout Style="{StaticResource HorizontalStackLayoutLikeButtonStyle}" Padding="4">
+                    <Image WidthRequest="24" Source="return.png"></Image>
+                    <Button Command="{Binding ReturnToMainMenuCommand}" Style="{StaticResource OverrideCustomButtonStyle}" FontSize="18" Text="Return to Main Menu"></Button>
+                </HorizontalStackLayout>
+            </FlexLayout>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
